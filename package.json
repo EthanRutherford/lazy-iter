@@ -1,6 +1,6 @@
 {
   "name": "lazy-iter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "lazily-evaluated chainable generator methods, providing near feature parity with the Array API",
   "main": "lazy-iter.js",
   "scripts": {

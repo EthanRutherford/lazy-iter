@@ -32,9 +32,9 @@ and a few additional methods which are useful.
 enumeration, which is unlikely to actually be the case
 
 `findIndex, indexOf, lastIndexOf` - methods dealing with indices are unusual in an
-iterator context (findIndex, indexOf, lastIndexOf)
+iterator context
 
-`toString, toSource, toLocaleString` - an iter can simply be flattened to an array first
+`toString, toSource, toLocaleString` - a `lazy-iter` can simply be flattened to an array first
 
 `keys, values, entries` - returning an iterator from an iterator is redundant
 
@@ -83,17 +83,17 @@ other as they would appear to be.
 `reverse` must consume the entire sequence in order to reach the end, and return
 an iterator which walks back through in reverse order.
 
-`sort` must similarly consume the sequence first. However, it still lazyly sorts
+`sort` must similarly consume the sequence first. However, it still lazily sorts
 the consumed list by performing a quicksort, recursing to the left first, and 
 returning items as they become sorted.
 
 `shift` is an odd case, not necessarily unlazy, but it returns the first item
-of the sequence, as opposed to the sequence, leaving the sequence itself only
+of the sequence, as opposed a new sequence, leaving the initial sequence only
 partially-consumed.
 
 `pop` is similar to shift, but worse, as it must consume the entire sequence to
 be able to return the last value. One should typically only use these two methods
-if finished with the sequence.
+as the final operation on a sequence.
 
 The search methods can potentially also partially consume sequences, so they also
 should be the final operation. 
