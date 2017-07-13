@@ -3,14 +3,14 @@
 lazy-iter provides a suite of generator methods which all share a
 common prototype (named lazy)
 
-```
+```javascript
 const lazy = require("lazy-iter");
 ```
 
 The `lazy` method is used to wrap any iterable into the base class, transforming
 it into a `lazy-iter`.
 
-```
+```javascript
 const enumerable = lazy([1, 2, 3, 4]); // iter:[1, 2, 3, 4]
 ```
 
@@ -18,7 +18,7 @@ The returned object now provides access to several lazy methods, most of which a
 nearly identical in usage to Array methods. These methods also, when appropriate,
 return `lazy-iter`s, allowing you to compose iterator chains, similar to linq.
 
-```
+```javascript
 enumerable.filter(x => x < 4).map(y => y * 2).slice(1); // iter:[4, 6]
 ```
 
@@ -102,7 +102,7 @@ The reduction methods (reduce, join, toArray...) will of course all wholly consu
 the sequence and return a single, non-iterator value.
 
 ## List of methods
-```
+```javascript
 const lazy = require("lazy-iter");
 //static methods
 lazy(iterable);             //returns an instance of lazy-iter
