@@ -1,0 +1,11 @@
+{
+  "name": "lazy-iter",
+  "version": "1.0.0",
+  "description": "lazily-evaluated chainable generator methods, providing near feature parity with the Array API",
+  "main": "lazy-iter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ethan Rutherford",
+  "license": "ISC"
+}
