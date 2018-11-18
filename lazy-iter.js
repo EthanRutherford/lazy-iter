@@ -1,11 +1,11 @@
-//this is the core iterator type
+// this is the core iterator type
 function* lazy(iterable) {
 	for (const item of iterable) {
 		yield item;
 	}
 }
 
-//the lazy chaining methods
+// the lazy chaining methods
 function* filter(filterer) {
 	for (const item of this) {
 		if (filterer(item)) {
@@ -103,89 +103,65 @@ function* forEach(method) {
 	}
 }
 
-//sort helpers
-function swap(array, a, b) {
-	const tmp = array[a];
-	array[a] = array[b];
-	array[b] = tmp;
+// heapsort helpers
+function siftUp(array, compare, root) {
+	const end = array.length;
+	const start = root;
+	const rootItem = array[root];
+
+	let child;
+	while ((child = 2 * root + 1) < end) {
+		if (child + 1 < end && compare(array[child], array[child + 1]) <= 0) {
+			child++;
+		}
+
+		array[root] = array[child];
+		root = child;
+	}
+
+	array[root] = rootItem;
+	siftDown(array, compare, start, root);
 }
 
-function median(array, sorter, a, b, c) {
-	if (sorter(array[b], array[a]) > 0) {
-		swap(array, a, b);
+function siftDown(array, compare, start, root) {
+	const rootItem = array[root];
+
+	while (root > start) {
+		const parent = (root - 1) >> 1;
+		const parentItem = array[parent];
+		if (compare(rootItem, parentItem) > 0) {
+			array[root] = parentItem;
+			root = parent;
+		} else {
+			break;
+		}
 	}
-	if (sorter(array[c], array[a]) > 0) {
-		swap(array, a, c);
-	}
-	if (sorter(array[b], array[c]) > 0) {
-		swap(array, b, c);
-	}
+
+	array[root] = rootItem;
 }
 
-//chain methods which must enumerate first
-function* sort(sorter = (a, b) => b - a) {
-	const enumerated = [...this];
+function heapify(array, compare) {
+	for (let i = Math.floor(array.length / 2) - 1; i >= 0; i--) {
+		siftUp(array, compare, i);
+	}
 
-	//in place recursion
-	const stack = [[false, 0, enumerated.length - 1]];
-	while (stack.length > 0) {
-		const [shouldYield, first, last] = stack.pop();
+	return array;
+}
 
-		//base case
-		if (shouldYield) {
-			for (let i = first; i <= last; i++) {
-				yield enumerated[i];
-			}
-			continue;
-		} else if (first > last) {
-			continue;
+// chain methods which must enumerate first
+function* sort(compare = (a, b) => b - a) {
+	const heap = heapify([...this], compare);
+
+	while (heap.length) {
+		const lastItem = heap.pop();
+		if (heap.length) {
+			const value = heap[0];
+			heap[0] = lastItem;
+			siftUp(heap, compare, 0);
+			yield value;
+		} else {
+			yield lastItem;
 		}
-
-		const middle = Math.floor(first + ((last - first) / 2));
-		median(enumerated, sorter, first, middle, last);
-
-		let i = first - 1;
-		let j = last;
-		let p = first - 1;
-		let q = last;
-		const pv = last;
-
-		//3 way partition
-		while (true) {
-			while (sorter(enumerated[++i], enumerated[pv]) > 0);
-			while (sorter(enumerated[pv], enumerated[--j]) > 0);
-			if (i >= j) break;
-			swap(enumerated, i, j);
-
-			//set aside equal elements
-			if (sorter(enumerated[i], enumerated[pv]) === 0) {
-				swap(enumerated, i, ++p);
-			}
-			if (sorter(enumerated[j], enumerated[pv]) === 0) {
-				swap(enumerated, j, --q);
-			}
-		}
-		//ensure the value at i === pivot value
-		let qlast = last;
-		if (enumerated[i] !== enumerated[pv]) {
-			swap(enumerated, i, pv);
-			qlast--;
-		}
-
-		//move equal-to-pivot elements into a middle partition
-		let u = i - 1;
-		let v = i + 1;
-		for (let k = first; k <= p; k++, u--) {
-			swap(enumerated, u, k);
-		}
-		for (let k = qlast; k >= q; k--, v++) {
-			swap(enumerated, v, k);
-		}
-
-		//add to stack to recurse
-		stack.push([v === last, v, last]);
-		stack.push([true, u + 1, v - 1]);
-		stack.push([first === u, first, u]);
 	}
 }
 
@@ -196,7 +172,7 @@ function* reverse() {
 	}
 }
 
-//single item retreival
+// single item retreival
 function shift() {
 	return this.next().value;
 }
@@ -205,7 +181,7 @@ function pop() {
 	return [...this].pop();
 }
 
-//search methods
+// search methods
 function every(condition) {
 	for (const item of this) {
 		if (!condition(item)) {
@@ -246,7 +222,7 @@ function includes(item) {
 	return false;
 }
 
-//transform methods
+// transform methods
 function reduce(reducer, initialValue) {
 	for (const item of this) {
 		initialValue = reducer(initialValue, item);

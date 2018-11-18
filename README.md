@@ -84,8 +84,8 @@ other as they would appear to be.
 an iterator which walks back through in reverse order.
 
 `sort` must similarly consume the sequence first. However, it still lazily sorts
-the consumed list by performing a quicksort, recursing to the left first, and 
-returning items as they become sorted.
+the consumed list by performing a heapSort; heapifying the full list, and 
+returning items by popping them from the resulting heap.
 
 `shift` is an odd case, not necessarily unlazy, but it returns the first item
 of the sequence, as opposed a new sequence, leaving the initial sequence only
